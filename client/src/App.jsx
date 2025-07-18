@@ -263,7 +263,8 @@ function App() {
     if (!name) return;
     // Try REST API first
     try {
-      const res = await fetch('http://localhost:5000/api/rooms', {
+      const { API_BASE } = await import('./backenint');
+      const res = await fetch(`${API_BASE}/api/rooms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name }),
@@ -308,7 +309,8 @@ function App() {
   const fetchInitialMessages = async () => {
     setIsLoadingMessages(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/messages?room=${encodeURIComponent(currentRoom || 'General')}&limit=20`);
+      const { API_BASE } = await import('./backenint');
+      const res = await fetch(`${API_BASE}/api/messages?room=${encodeURIComponent(currentRoom || 'General')}&limit=20`);
       const data = await res.json();
       setPaginatedMessages(data); // keep order: oldest to newest
       setHasMoreMessages(data.length === 20);
@@ -324,7 +326,8 @@ function App() {
     setIsLoadingMessages(true);
     const oldest = paginatedMessages[0];
     try {
-      const res = await fetch(`http://localhost:5000/api/messages?room=${encodeURIComponent(currentRoom || 'General')}&limit=20&before=${encodeURIComponent(oldest.timestamp)}`);
+      const { API_BASE } = await import('./backenint');
+      const res = await fetch(`${API_BASE}/api/messages?room=${encodeURIComponent(currentRoom || 'General')}&limit=20&before=${encodeURIComponent(oldest.timestamp)}`);
       const data = await res.json();
       // Deduplicate by id
       setPaginatedMessages(prev => {
@@ -412,7 +415,8 @@ function App() {
     }
     if (searchTimeout.current) clearTimeout(searchTimeout.current);
     searchTimeout.current = setTimeout(async () => {
-      let url = 'http://localhost:5000/api/messages?limit=10&search=' + encodeURIComponent(searchTerm);
+      const { API_BASE } = await import('./backenint');
+      let url = `${API_BASE}/api/messages?limit=10&search=` + encodeURIComponent(searchTerm);
       if (privateRecipient) {
         url += `&isPrivate=true&recipientId=${privateRecipient.id}`;
       } else if (currentRoom) {
