@@ -2,7 +2,6 @@
 // Centralized backend API interaction functions for the frontend
 
 const API_BASE = 'https://roomchats-3ccf.onrender.com';
-console.log("API_BASE in production:", API_BASE);
 
 export async function getRooms() {
   const res = await fetch(`${API_BASE}/api/rooms`);
