@@ -48,13 +48,16 @@ function App() {
   // Fetch available rooms on login (when username is set)
   useEffect(() => {
     if (username) {
-      console.log('Fetching rooms from http://localhost:5000/api/rooms after login...');
-      fetch('http://localhost:5000/api/rooms')
-        .then((res) => res.json())
-        .then((data) => {
-          console.log('Rooms fetched from backend:', data);
-          setRooms(data);
-        });
+      import('./backenint').then(({ getRooms }) => {
+        getRooms()
+          .then((data) => {
+            console.log('Rooms fetched from backend:', data);
+            setRooms(data);
+          })
+          .catch((err) => {
+            console.error('Failed to fetch rooms:', err);
+          });
+      });
     }
   }, [username]);
 
